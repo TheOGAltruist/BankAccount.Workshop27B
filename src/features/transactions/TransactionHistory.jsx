@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { deposit, withdrawal, transfer } from "./transactionsSlice";
 import "./transactionHistory.scss";
 
 /** Displays a table row with transaction information  */
@@ -12,7 +15,7 @@ const TransactionRow = ({ transaction: { type, amount, balance } }) => (
 /** Displays a table of the user's transaction history. */
 export default function TransactionHistory() {
   // TODO: Get the transaction history from the Redux store using the useSelector hook
-  const history = [];
+  const fullHistory = useSelector((state) => state.transaction.history);
 
   return (
     <section className="transactions-history container">
@@ -26,10 +29,15 @@ export default function TransactionHistory() {
           </tr>
         </thead>
         <tbody>
-          {/* TODO
-          Map over the transactions in `history`
-          to render the appropriate `TransactionRow`s
-          */}
+          {
+            fullHistory.map((history, idx) => {
+            return (<tr key={idx}>
+                <td>{history.type}</td>
+                <td>{history.amount}</td>
+                <td>{history.balance}</td>
+            </tr>)
+            })
+          }
         </tbody>
       </table>
     </section>
