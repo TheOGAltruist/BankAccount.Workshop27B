@@ -24,8 +24,10 @@ export default function TransactionHistory() {
         <thead>
           <tr>
             <th scope="col">Type</th>
+            <th scope="col" colSpan={2}>Sender/Recipient</th>
             <th scope="col">Amount</th>
             <th scope="col">Balance</th>
+            <th scope="col">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -33,8 +35,10 @@ export default function TransactionHistory() {
             fullHistory.map((history, idx) => {
             return (<tr key={idx}>
                 <td>{history.type}</td>
+                <td colSpan={2}>{history.person}</td>
                 <td>{history.amount}</td>
                 <td>{history.balance}</td>
+                <td>{history.status === true ? "Success" : "Failed"}</td>
             </tr>)
             })
           }

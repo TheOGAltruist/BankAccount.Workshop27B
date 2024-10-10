@@ -4,7 +4,9 @@ import { createSlice } from "@reduxjs/toolkit";
  * Each transaction is recorded as an object with the following properties.
  * @typedef Transaction
  * @property {"deposit"|"withdrawal"|"transfer/[name]"} type
+ * @property {string} person
  * @property {number} amount
+ * @property {boolean} status
  * @property {number} balance - The balance after the transaction is completed.
  */
 
@@ -31,15 +33,19 @@ const transactionsSlice = createSlice({
   initialState,
   reducers: {
     withdrawal: (state, { payload }) => {
-      if(state.balance > 0){
+      if(state.balance >= payload.amount){
       state.balance -= payload.amount;
       state.history.push({
-        type: "withdrawal",
+        type: "withdraw",
+        status: true,
+        person: "self",
         amount: payload.amount,
         balance: state.balance,
       })} else{
         state.history.push({
-          type: "withdrawal/failed",
+          type: "withdraw",
+          status: false,
+          person: "self",
           amount: payload.amount,
           balance: state.balance,
         })
@@ -49,20 +55,26 @@ const transactionsSlice = createSlice({
       state.balance += payload.amount;
       state.history.push({
         type: "deposit",
+        status: true,
+        person: "self",
         amount: payload.amount,
         balance: state.balance
       });
     },
     transfer: (state, { payload }) => {
-      if(state.balance > 0){
+      if(state.balance >= payload.amount){
       state.balance -= payload.amount;
       state.history.push({
-        type: "transfer/[name]",
+        type: "transfer",
+        status: true,
+        person: payload.recipient,
         amount: payload.amount,
         balance: state.balance
       })} else{
         state.history.push({
-          type: `transfer/${payload.recipient}/failed`,
+          type: "transfer",
+          status: false,
+          person: payload.recipient,
           amount: payload.amount,
           balance: state.balance
         })
